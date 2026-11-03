@@ -44,7 +44,8 @@ const modulos = [
 function Landing() {
   const [logged, setLogged] = useState(false);
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setLogged(!!data.session));
+    if (!import.meta.env['VITE_SUPABASE_URL']) return;
+    supabase.auth.getSession().then(({ data }) => setLogged(!!data.session)).catch(() => {});
   }, []);
 
   return (

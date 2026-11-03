@@ -124,6 +124,7 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
+    if (!import.meta.env['VITE_SUPABASE_URL']) return;
     const { data } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();

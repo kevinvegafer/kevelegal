@@ -36,6 +36,13 @@
       "when": 1793623566868,
       "tag": "0004_funciones_clio_completas",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793711016640,
+      "tag": "0005_aplicar_esquema_existente",
+      "breakpoints": true
     }
   ]
 }

@@ -1,28 +1,12 @@
-import { supabase } from "@/integrations/supabase/client";
 import { setEstudioPreferido } from "@/hooks/use-estudio";
+import { activarDemo } from "@/lib/demo-client";
 
 /**
- * Modo prueba: inicia una sesión anónima (sin registro) y crea un estudio
- * vacío propio para explorar Kevelegal. Los datos quedan aislados como
- * cualquier otro estudio y se pierden al cerrar sesión.
+ * Modo prueba: funciona solo en el navegador, sin servidor ni base de datos.
+ * Crea un estudio con datos de ejemplo guardados en este dispositivo.
  */
 export async function entrarModoPrueba() {
-  const { data, error } = await supabase.auth.signInAnonymously();
-  if (error) throw error;
-  if (!data.user) throw new Error("No se pudo iniciar el modo prueba");
-
-  const { data: miembros } = await supabase
-    .from("estudio_miembros")
-    .select("estudio_id")
-    .eq("user_id", data.user.id)
-    .limit(1);
-
-  let estudioId = miembros?.[0]?.estudio_id;
-  if (!estudioId) {
-    const res = await supabase.rpc("crear_estudio", { _nombre: "Estudio de prueba", _departamento: "Lima" });
-    if (res.error) throw res.error;
-    estudioId = res.data as string;
-  }
+  const estudioId = activarDemo();
   setEstudioPreferido(estudioId);
   return estudioId;
 }
