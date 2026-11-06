@@ -1,0 +1,241 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Kevelegal design system — negro y naranja.
+ * All colors are oklch tokens. Components must use these semantic tokens only.
+ */
+
+@theme inline {
+  --color-materia-penal: var(--materia-penal);
+  --color-materia-civil: var(--materia-civil);
+  --color-materia-laboral: var(--materia-laboral);
+  --color-materia-comercial: var(--materia-comercial);
+  --color-materia-familia: var(--materia-familia);
+  --color-materia-publico: var(--materia-publico);
+  --color-materia-otro: var(--materia-otro);
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-glow: var(--primary-glow);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.135 0.004 56);
+  --foreground: oklch(0.955 0.006 80);
+  --card: oklch(0.172 0.005 56);
+  --card-foreground: oklch(0.955 0.006 80);
+  --popover: oklch(0.18 0.005 56);
+  --popover-foreground: oklch(0.955 0.006 80);
+  --primary: oklch(0.72 0.19 47);
+  --primary-glow: oklch(0.8 0.16 62);
+  --primary-foreground: oklch(0.16 0.02 45);
+  --secondary: oklch(0.225 0.006 56);
+  --secondary-foreground: oklch(0.93 0.006 80);
+  --muted: oklch(0.21 0.005 56);
+  --muted-foreground: oklch(0.68 0.012 70);
+  --accent: oklch(0.26 0.04 48);
+  --accent-foreground: oklch(0.88 0.1 60);
+  --destructive: oklch(0.62 0.21 27);
+  --destructive-foreground: oklch(0.98 0.005 80);
+  /* Etiquetas por materia (tablero) */
+  --materia-penal: oklch(0.66 0.21 25);
+  --materia-civil: oklch(0.68 0.15 250);
+  --materia-laboral: oklch(0.72 0.15 150);
+  --materia-comercial: oklch(0.82 0.15 88);
+  --materia-familia: oklch(0.72 0.15 345);
+  --materia-publico: oklch(0.7 0.12 200);
+  --materia-otro: oklch(0.65 0.02 60);
+  --success: oklch(0.72 0.14 152);
+  --success-foreground: oklch(0.16 0.03 152);
+  --warning: oklch(0.82 0.15 85);
+  --warning-foreground: oklch(0.2 0.04 85);
+  --info: oklch(0.72 0.11 235);
+  --border: oklch(0.265 0.006 56);
+  --input: oklch(0.3 0.007 56);
+  --ring: oklch(0.72 0.19 47);
+  --chart-1: oklch(0.72 0.19 47);
+  --chart-2: oklch(0.8 0.15 75);
+  --chart-3: oklch(0.6 0.15 35);
+  --chart-4: oklch(0.72 0.14 152);
+  --chart-5: oklch(0.55 0.02 60);
+  --sidebar: oklch(0.11 0.003 56);
+  --sidebar-foreground: oklch(0.86 0.008 75);
+  --sidebar-primary: oklch(0.72 0.19 47);
+  --sidebar-primary-foreground: oklch(0.16 0.02 45);
+  --sidebar-accent: oklch(0.2 0.02 50);
+  --sidebar-accent-foreground: oklch(0.95 0.01 70);
+  --sidebar-border: oklch(0.22 0.005 56);
+  --sidebar-ring: oklch(0.72 0.19 47);
+
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --gradient-hero: radial-gradient(
+    ellipse 80% 60% at 70% 20%,
+    color-mix(in oklab, var(--primary) 28%, transparent),
+    transparent 70%
+  );
+  --shadow-glow: 0 10px 40px -12px color-mix(in oklab, var(--primary) 55%, transparent);
+  --shadow-card: 0 1px 0 0 color-mix(in oklab, var(--foreground) 4%, transparent) inset,
+    0 12px 32px -18px oklch(0 0 0 / 0.7);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  button,
+  a,
+  [role="button"],
+  label,
+  summary {
+    touch-action: manipulation;
+  }
+
+  /* Los elementos de una grilla pueden encogerse: evita que el contenido se salga en celular. */
+  .grid > * {
+    min-width: 0;
+  }
+
+  /* En celular, campos de 16px para que iOS no haga zoom al escribir. */
+  @media (max-width: 639px) {
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+@utility bg-gradient-primary {
+  background-image: var(--gradient-primary);
+}
+
+@utility bg-hero {
+  background-image: var(--gradient-hero);
+}
+
+@utility shadow-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+@utility text-gradient-primary {
+  background-image: var(--gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Barra inferior estilo app nativa (vidrio esmerilado). */
+@utility tab-bar {
+  background-color: color-mix(in oklab, var(--card) 97%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 -12px 32px -20px oklch(0 0 0 / 0.8);
+}
+
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Separación inferior para que el contenido no quede bajo la barra de pestañas. */
+@utility pb-tabbar {
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+}
+
+/* Carrusel horizontal sin barra de desplazamiento visible. */
+@utility scroll-row {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility grid-lines {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
