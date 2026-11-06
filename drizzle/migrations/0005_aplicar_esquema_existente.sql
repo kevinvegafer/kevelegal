@@ -1,1 +1,0 @@
-comment on table public.estudios is 'Estudios jurídicos (tenants)';
