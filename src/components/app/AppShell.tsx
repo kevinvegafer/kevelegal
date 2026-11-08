@@ -1,6 +1,6 @@
 import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import {
   Building2,
   CalendarDays,
@@ -9,7 +9,6 @@ import {
   LayoutDashboard,
   ListChecks,
   LogOut,
-  Search,
   Settings,
   UserRound,
   Users,
@@ -48,21 +47,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Logo } from "./Logo";
 import { useEstudio, setEstudioPreferido } from "@/hooks/use-estudio";
 import { supabase } from "@/lib/demo-db/client";
-import { clientesQuery, expedientesQuery, nombreCliente, perfilQuery } from "@/lib/queries";
+import { perfilQuery } from "@/lib/queries";
+import { IconoLupa } from "./IconoLupa";
+import { LupaGlobal, abrirBusqueda, precargarBusqueda, type PaginaBuscable } from "./BuscadorGlobal";
 import { AvisosCampana } from "./Avisos";
 import { CronometrosBarra } from "./Cronometros";
+
+/** Palabras extra para encontrar cada sección desde la búsqueda. */
+const CLAVES_PAGINA: Record<string, string> = {
+  "/dashboard": "inicio panel resumen",
+  "/clientes": "personas empresas dni ruc",
+  "/expedientes": "casos procesos juicios",
+  "/plazos": "tareas vencimientos pendientes",
+  "/calendario": "agenda audiencias citas eventos",
+  "/plantillas": "procesos modelos automatizar",
+  "/tablero": "kanban fases etapas",
+  "/mensajes": "portal clientes correos whatsapp",
+  "/tiempo": "horas cronometro facturar",
+  "/finanzas": "honorarios gastos pagos cobranza cuotas facturas",
+  "/reportes": "estadisticas informes csv pdf",
+  "/asistente": "ia inteligencia artificial resumir documentos",
+  "/equipo": "miembros usuarios invitar abogados",
+  "/configuracion": "ajustes estudio agenda publica campos",
+  "/respaldo": "exportar copia seguridad backup",
+};
 
 const ROL_LABEL = { admin: "Administrador", abogado: "Abogado", asistente: "Asistente" } as const;
 
@@ -71,7 +83,6 @@ export function AppShell() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [searchOpen, setSearchOpen] = useState(false);
   const { data: perfil } = useQuery(perfilQuery());
 
   const nav = [
@@ -94,16 +105,12 @@ export function AppShell() {
     ...(esAdmin ? [{ to: "/respaldo", label: "Respaldo", icon: DatabaseBackup }] : []),
   ] as const;
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setSearchOpen((o) => !o);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  const paginas = useMemo<PaginaBuscable[]>(
+    () => [...nav, ...navAdmin].map((i) => ({ to: i.to, label: i.label, claves: CLAVES_PAGINA[i.to] })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [puedeVerFinanzas, esAdmin],
+  );
+
 
   async function signOut() {
     await queryClient.cancelQueries();
@@ -225,11 +232,13 @@ export function AppShell() {
             <Button
               variant="outline"
               className="h-9 min-w-0 flex-1 justify-start text-muted-foreground max-md:hidden md:max-w-md"
-              onClick={() => setSearchOpen(true)}
-              aria-label="Buscar clientes o expedientes"
+              onClick={() => abrirBusqueda()}
+              onPointerEnter={() => precargarBusqueda(queryClient, estudio.id, user.id)}
+              onFocus={() => precargarBusqueda(queryClient, estudio.id, user.id)}
+              aria-label="Buscar en todo el estudio"
             >
-              <Search className="shrink-0" />
-              <span className="truncate">Buscar clientes o expedientes…</span>
+              <IconoLupa className="size-[18px]" />
+              <span className="truncate">Buscar clientes, expedientes, plazos, documentos…</span>
               <kbd className="ml-auto hidden rounded border border-border px-1.5 font-mono text-[10px] lg:inline">
                 Ctrl K
               </kbd>
@@ -239,10 +248,11 @@ export function AppShell() {
                 variant="ghost"
                 size="icon"
                 className="rounded-full md:hidden"
-                onClick={() => setSearchOpen(true)}
-                aria-label="Buscar clientes o expedientes"
+                onPointerDown={() => precargarBusqueda(queryClient, estudio.id, user.id)}
+                onClick={() => abrirBusqueda()}
+                aria-label="Buscar en todo el estudio"
               >
-                <Search />
+                <IconoLupa className="size-[22px]" />
               </Button>
               <CronometrosBarra />
               <AvisosCampana />
@@ -257,7 +267,11 @@ export function AppShell() {
         <BarraPestanas pathname={pathname} />
       </SidebarInset>
 
-      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} estudioId={estudio.id} />
+      <LupaGlobal
+        estudioId={estudio.id}
+        userId={user.id}
+        paginas={paginas}
+      />
     </SidebarProvider>
   );
 }
@@ -302,62 +316,5 @@ function BarraPestanas({ pathname }: { pathname: string }) {
         </button>
       </div>
     </nav>
-  );
-}
-
-function GlobalSearch({
-  open,
-  onOpenChange,
-  estudioId,
-}: {
-  open: boolean;
-  onOpenChange: (o: boolean) => void;
-  estudioId: string;
-}) {
-  const navigate = useNavigate();
-  const { data: clientes = [] } = useQuery({ ...clientesQuery(estudioId), enabled: open });
-  const { data: expedientes = [] } = useQuery({ ...expedientesQuery(estudioId), enabled: open });
-
-  return (
-    <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Nombre, DNI, RUC, número de expediente…" />
-      <CommandList>
-        <CommandEmpty>Sin resultados.</CommandEmpty>
-        <CommandGroup heading="Expedientes">
-          {expedientes.slice(0, 50).map((e) => (
-            <CommandItem
-              key={e.id}
-              value={`${e.titulo} ${e.numero_expediente ?? ""} ${nombreCliente(e.cliente)}`}
-              onSelect={() => {
-                onOpenChange(false);
-                navigate({ to: "/expedientes/$id", params: { id: e.id } });
-              }}
-            >
-              <FolderKanban />
-              <span className="truncate">{e.titulo}</span>
-              <span className="ml-auto font-mono text-xs text-muted-foreground">{e.numero_expediente}</span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
-        <CommandGroup heading="Clientes">
-          {clientes.slice(0, 50).map((c) => (
-            <CommandItem
-              key={c.id}
-              value={`${nombreCliente(c)} ${c.numero_documento}`}
-              onSelect={() => {
-                onOpenChange(false);
-                navigate({ to: "/clientes/$id", params: { id: c.id } });
-              }}
-            >
-              <Users />
-              <span className="truncate">{nombreCliente(c)}</span>
-              <span className="ml-auto font-mono text-xs text-muted-foreground">
-                {c.tipo_documento} {c.numero_documento}
-              </span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
-      </CommandList>
-    </CommandDialog>
   );
 }

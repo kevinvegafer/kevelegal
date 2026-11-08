@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2E241D"/><stop offset="1" stop-color="#110D0A"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="32" cy="14" r="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F59A3C" stop-opacity=".42"/><stop offset="1" stop-color="#F59A3C" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="oro" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFD596"/><stop offset=".45" stop-color="#F7A045"/><stop offset="1" stop-color="#E35E1C"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#bg)"/>
+  <rect width="64" height="64" rx="15" fill="url(#halo)"/>
+  <g transform="translate(32 32.5) scale(.82) translate(-32 -32)"><g stroke="url(#oro)" stroke-linecap="round" fill="none">
+    <path d="M11 25Q32 16.5 53 25" stroke-width="4.5"/>
+    <path d="M32 24v22" stroke-width="5.5"/>
+    <path d="M21 52h22" stroke-width="5"/>
+    <path d="M11 25 6 38M11 25l5 13M53 25l-5 13M53 25l5 13" stroke-width="2.2"/>
+  </g>
+  <path d="M32 4.5l2.6 6.4 6.4 2.6-6.4 2.6L32 22.5l-2.6-6.4-6.4-2.6 6.4-2.6z" fill="url(#oro)"/>
+  <path d="M3.5 38h15a7.5 7.5 0 0 1-15 0z" fill="url(#oro)"/>
+  <path d="M45.5 38h15a7.5 7.5 0 0 1-15 0z" fill="url(#oro)"/>
+  <path d="M28 46h8l3 6H25z" fill="url(#oro)"/>
+</g></svg>

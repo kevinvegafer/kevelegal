@@ -24,6 +24,9 @@
 - [x] Portal del cliente, agenda pública, avisos, facturar horas e invitaciones funcionando en demo
 - [x] Asistente IA conectado
 
+## Hecho (tanda 4)
+- [x] Búsqueda global mejorada: todo tipo de registro, filtros, recientes, tolerante a errores y rápida con muchos datos
+
 ## Bloqueado
 - Envío automático por correo (recordatorios, reportes programados): requiere un dominio de correo propio
 - Pagos con tarjeta: requiere elegir proveedor

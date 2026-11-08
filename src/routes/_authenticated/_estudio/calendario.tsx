@@ -1,7 +1,7 @@
 import { CitasSolicitadas } from "@/components/app/CitasSolicitadas";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   addMonths,
   eachDayOfInterval,
@@ -16,7 +16,7 @@ import {
 import { es } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { eventosQuery, plazosQuery, type Evento } from "@/lib/queries";
-import { esFeriado, labelOf, toISODate, TIPOS_EVENTO } from "@/lib/peru";
+import { esFeriado, labelOf, parseISODate, toISODate, TIPOS_EVENTO } from "@/lib/peru";
 import { useEstudio } from "@/hooks/use-estudio";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -27,6 +27,10 @@ import { tareasQuery, type Tarea } from "@/lib/mis-tareas";
 import { TareaDialog } from "@/components/app/MisTareas";
 
 export const Route = createFileRoute("/_authenticated/_estudio/calendario")({
+  validateSearch: (search: Record<string, unknown>): { dia?: string } => {
+    const dia = search["dia"];
+    return typeof dia === "string" && /^\d{4}-\d{2}-\d{2}$/.test(dia) ? { dia } : {};
+  },
   head: () => ({
     meta: [
       { title: "Calendario jurídico — Kevelegal" },
@@ -49,8 +53,16 @@ function CalendarioPage() {
   const [tareaSel, setTareaSel] = useState<Tarea | null>(null);
   const { data: eventos } = useSuspenseQuery(eventosQuery(estudioId));
   const { data: plazos } = useSuspenseQuery(plazosQuery(estudioId));
-  const [mes, setMes] = useState(() => startOfMonth(new Date()));
-  const [sel, setSel] = useState(() => new Date());
+  const { dia } = Route.useSearch();
+  const [mes, setMes] = useState(() => startOfMonth(dia ? parseISODate(dia) : new Date()));
+  const [sel, setSel] = useState(() => (dia ? parseISODate(dia) : new Date()));
+  // Al llegar desde la búsqueda con un día, mostrar ese mes y ese día.
+  useEffect(() => {
+    if (!dia) return;
+    const d = parseISODate(dia);
+    setMes(startOfMonth(d));
+    setSel(d);
+  }, [dia]);
   const [nuevo, setNuevo] = useState(false);
   const [edit, setEdit] = useState<Evento | null>(null);
 

@@ -20,6 +20,7 @@
   --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces", ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-firma: "Mrs Saint Delafield", cursive;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -238,4 +239,20 @@
     linear-gradient(color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px),
     linear-gradient(90deg, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px);
   background-size: 48px 48px;
+}
+
+/* Coincidencia resaltada en la búsqueda global. */
+@utility resaltado {
+  background-color: color-mix(in oklab, var(--primary) 22%, transparent);
+  color: var(--primary-glow);
+  border-radius: 0.2rem;
+  padding-inline: 0.05em;
+}
+
+/* Ventana de búsqueda: pantalla completa en celular, panel flotante en escritorio. */
+@utility panel-busqueda {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--foreground) 6%, transparent),
+    0 30px 80px -20px oklch(0 0 0 / 0.85),
+    var(--shadow-glow);
 }

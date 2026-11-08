@@ -63,7 +63,14 @@ import { IniciarCronometro } from "@/components/app/Cronometros";
 import { AplicarPlantilla } from "@/components/forms/PlantillaForms";
 import { CamposExtraExpediente } from "@/components/app/CamposPersonalizados";
 
+const TABS_EXPEDIENTE = ["plazos", "tareas", "audiencias", "partes", "bitacora", "documentos", "economico"] as const;
+type TabExpediente = (typeof TABS_EXPEDIENTE)[number];
+
 export const Route = createFileRoute("/_authenticated/_estudio/expedientes/$id")({
+  validateSearch: (search: Record<string, unknown>): { tab?: TabExpediente } => {
+    const tab = TABS_EXPEDIENTE.find((t) => t === search["tab"]);
+    return tab ? { tab } : {};
+  },
   head: () => ({
     meta: [
       { title: "Expediente — Kevelegal" },
@@ -92,6 +99,7 @@ type Modal =
 
 function ExpedienteDetalle() {
   const { id } = Route.useParams();
+  const { tab } = Route.useSearch();
   const { estudioId, puedeEliminar, puedeVerFinanzas } = useEstudio();
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -208,7 +216,7 @@ function ExpedienteDetalle() {
 
       <CamposExtraExpediente expediente={exp} />
 
-      <Tabs defaultValue="plazos">
+      <Tabs key={tab ?? "plazos"} defaultValue={tab ?? "plazos"}>
         <TabsList className="mb-4 flex h-auto flex-wrap justify-start">
           <TabsTrigger value="plazos">Plazos ({pendientes.length})</TabsTrigger>
           <TabsTrigger value="tareas">Tareas</TabsTrigger>
